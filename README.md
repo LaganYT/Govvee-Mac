@@ -1,4 +1,4 @@
-# Govvee
+# Goveac
 
 Native macOS app for controlling Govee lights and devices via the [Govee Open API](https://developer.govee.com/).
 
@@ -6,6 +6,7 @@ Native macOS app for controlling Govee lights and devices via the [Govee Open AP
 
 - Sign in with your Govee API key (stored in Keychain)
 - Browse all devices on your account
+- Organize devices into custom groups
 - Power, brightness, color, and color temperature controls
 - Toggles, modes, ranges, work modes, and sensor readings
 - Light scenes, DIY scenes, and snapshots
@@ -21,16 +22,16 @@ Native macOS app for controlling Govee lights and devices via the [Govee Open AP
 ```bash
 cd "Govvee-Mac"
 xcodegen generate
-open Govvee.xcodeproj
+open Goveac.xcodeproj
 ```
 
-Then select the **Govvee** scheme and press Run (⌘R).
+Then select the **Goveac** scheme and press Run (⌘R).
 
 Or build from the command line:
 
 ```bash
 xcodegen generate
-xcodebuild -scheme Govvee -configuration Debug build
+xcodebuild -scheme Goveac -configuration Debug build
 ```
 
 ## API

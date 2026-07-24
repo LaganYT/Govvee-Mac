@@ -12,7 +12,7 @@ struct LoginView: View {
 
             VStack(alignment: .leading, spacing: 28) {
                 VStack(alignment: .leading, spacing: 10) {
-                    Text("GOVVEE")
+                    Text("GOVEAC")
                         .font(.system(size: 42, weight: .semibold, design: .rounded))
                         .tracking(6)
                         .foregroundStyle(Theme.textPrimary)

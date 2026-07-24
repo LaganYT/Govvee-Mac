@@ -1,7 +1,7 @@
 import SwiftUI
 
 @main
-struct GovveeApp: App {
+struct GoveacApp: App {
     @State private var appState = AppState()
 
     var body: some Scene {
@@ -18,6 +18,12 @@ struct GovveeApp: App {
         .commands {
             CommandGroup(replacing: .newItem) {}
             CommandMenu("Devices") {
+                Button("New Group…") {
+                    appState.isPresentingNewGroup = true
+                }
+                .keyboardShortcut("n", modifiers: [.command])
+                .disabled(!appState.isAuthenticated)
+
                 Button("Refresh Devices") {
                     Task {
                         do {
@@ -51,7 +57,7 @@ struct RootView: View {
             Theme.glowGradient.ignoresSafeArea()
 
             if appState.isBootstrapping {
-                ProgressView("Opening Govvee…")
+                ProgressView("Opening Goveac…")
                     .tint(Theme.accent)
                     .foregroundStyle(Theme.textSecondary)
             } else if appState.isAuthenticated {

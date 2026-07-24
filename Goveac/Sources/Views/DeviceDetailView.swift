@@ -80,6 +80,7 @@ struct DeviceDetailView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 22) {
                 header
+                groupsMembership
 
                 if powerCapability != nil || brightnessCapability != nil || colorCapability != nil || colorTempCapability != nil {
                     primaryControls
@@ -246,6 +247,60 @@ struct DeviceDetailView: View {
         }
         .padding(22)
         .panelStyle()
+    }
+
+    private var groupsMembership: some View {
+        sectionCard(title: "Groups") {
+            let memberships = appState.groups(containing: liveDevice.id)
+
+            VStack(alignment: .leading, spacing: 12) {
+                if memberships.isEmpty {
+                    Text("Not in any group.")
+                        .font(.system(size: 13, weight: .medium, design: .rounded))
+                        .foregroundStyle(Theme.textSecondary)
+                } else {
+                    FlowChips(items: memberships.map(\.name)) { name in
+                        if let group = memberships.first(where: { $0.name == name }) {
+                            appState.selection = .group(group.id)
+                        }
+                    }
+                }
+
+                HStack(spacing: 10) {
+                    Menu("Add to Group") {
+                        if appState.groups.isEmpty {
+                            Button("Create Group…") {
+                                appState.createGroup(name: "New Group", deviceIDs: [liveDevice.id])
+                                if let id = appState.groups.last?.id {
+                                    appState.editingGroupID = id
+                                }
+                            }
+                        } else {
+                            ForEach(appState.groups) { group in
+                                Button(group.name) {
+                                    appState.addDevice(liveDevice.id, toGroup: group.id)
+                                }
+                                .disabled(group.deviceIDs.contains(liveDevice.id))
+                            }
+                            Divider()
+                            Button("New Group…") {
+                                appState.isPresentingNewGroup = true
+                            }
+                        }
+                    }
+
+                    if !memberships.isEmpty {
+                        Menu("Remove from") {
+                            ForEach(memberships) { group in
+                                Button(group.name, role: .destructive) {
+                                    appState.removeDevice(liveDevice.id, fromGroup: group.id)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private var primaryControls: some View {
@@ -466,4 +521,31 @@ func friendlyInstanceName(_ instance: String) -> String {
     return cleaned
         .replacingOccurrences(of: "([a-z])([A-Z])", with: "$1 $2", options: .regularExpression)
         .capitalized
+}
+
+struct FlowChips: View {
+    let items: [String]
+    let onTap: (String) -> Void
+
+    var body: some View {
+        LazyVGrid(columns: [GridItem(.adaptive(minimum: 100), spacing: 8)], alignment: .leading, spacing: 8) {
+            ForEach(items, id: \.self) { item in
+                Button {
+                    onTap(item)
+                } label: {
+                    Text(item)
+                        .font(.system(size: 12, weight: .medium, design: .rounded))
+                        .foregroundStyle(Theme.textPrimary)
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 7)
+                        .background(
+                            Capsule()
+                                .fill(Theme.accentSoft)
+                                .overlay(Capsule().stroke(Theme.accent.opacity(0.25), lineWidth: 1))
+                        )
+                }
+                .buttonStyle(.plain)
+            }
+        }
+    }
 }

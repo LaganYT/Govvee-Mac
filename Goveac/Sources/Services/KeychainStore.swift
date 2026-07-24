@@ -2,7 +2,7 @@ import Foundation
 import Security
 
 enum KeychainStore {
-    private static let service = "com.govvee.app"
+    private static let service = "com.goveac.app"
     private static let apiKeyAccount = "govee-api-key"
 
     static func saveAPIKey(_ key: String) throws {
@@ -26,6 +26,24 @@ enum KeychainStore {
     }
 
     static func loadAPIKey() -> String? {
+        if let key = loadAPIKey(service: service) {
+            return key
+        }
+        // Migrate key saved under the previous app identity.
+        if let legacy = loadAPIKey(service: "com.govvee.app") {
+            try? saveAPIKey(legacy)
+            deleteAPIKey(service: "com.govvee.app")
+            return legacy
+        }
+        return nil
+    }
+
+    static func deleteAPIKey() {
+        deleteAPIKey(service: service)
+        deleteAPIKey(service: "com.govvee.app")
+    }
+
+    private static func loadAPIKey(service: String) -> String? {
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrService as String: service,
@@ -45,7 +63,7 @@ enum KeychainStore {
         return key
     }
 
-    static func deleteAPIKey() {
+    private static func deleteAPIKey(service: String) {
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrService as String: service,
