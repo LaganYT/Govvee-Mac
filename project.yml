@@ -1,0 +1,33 @@
+name: Govvee
+options:
+  bundleIdPrefix: com.govvee
+  deploymentTarget:
+    macOS: "14.0"
+  createIntermediateGroups: true
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    MACOSX_DEPLOYMENT_TARGET: "14.0"
+targets:
+  Govvee:
+    type: application
+    platform: macOS
+    sources:
+      - path: Govvee/Sources
+    resources:
+      - path: Govvee/Resources
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.govvee.app
+        PRODUCT_NAME: Govvee
+        MARKETING_VERSION: "1.0"
+        CURRENT_PROJECT_VERSION: "1"
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_CFBundleDisplayName: Govvee
+        INFOPLIST_KEY_LSApplicationCategoryType: public.app-category.utilities
+        INFOPLIST_KEY_NSHumanReadableCopyright: ""
+        INFOPLIST_KEY_NSPrincipalClass: NSApplication
+        CODE_SIGN_ENTITLEMENTS: Govvee/Resources/Govvee.entitlements
+        ENABLE_HARDENED_RUNTIME: YES
+        COMBINE_HIDPI_IMAGES: YES
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
